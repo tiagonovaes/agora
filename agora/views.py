@@ -473,21 +473,23 @@ def enviaDadosMeuEspaco(request):
     us = User.objects.get(user=request.user)
     user = us.user
 
-    categoria = request.POST['categoriatag']
-    comentario = request.POST['comentario']
-    arquivo = request.FILES['arquivo']
-    link = request.POST['link']
-    u = URLValidator()
-    u.__call__(link)
-
-    x = MeuEspacoArtigo(user=user.username, categoria=categoria, publ_date=timezone.now(), link=link, comentario=comentario, secao='Artigo', arquivo=arquivo)
-    x.save()
-
-    success = True
-
-    if success == True:
-        messages.success(request, "Apelido excluido com sucesso")
-        return redirect(request.META['HTTP_REFERER'])
+    if request.method == 'POST':
+        categoria = request.POST['categoriatag']
+        comentario = request.POST['comentario']
+        link = request.POST['link']
+        if link != '':
+            u = URLValidator()
+            u.__call__(link)
+        form = DocumentForm(request.POST, request.FILES)
+        if form.is_valid():
+            x = MeuEspacoArtigo(user=user.username, categoria=categoria, publ_date=timezone.now(), link=link, comentario=comentario, secao='Artigo', arquivo= request.FILES['arquivo'])
+            x.save()
+            success = True
+            if success == True:
+                messages.success(request, "Apelido excluido com sucesso")
+                return redirect(request.META['HTTP_REFERER'])
+        else:
+            form = DocumentForm() # A empty, unbound form
+            raise Http404
     else:
-        messages.error(request, error_message)
         return redirect(request.META['HTTP_REFERER'])
