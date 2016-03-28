@@ -240,4 +240,4 @@ class MeuEspacoArtigo(models.Model):
     link =  models.URLField(max_length=1000, blank=True)
     comentario =  models.CharField('Comentário',max_length=200, blank=True)
     secao = models.CharField('Seção',max_length=30, blank=True)
-    arquivo = models.FileField (upload_to = settings.MEDIA_ROOT, max_length=20000, blank=True)
+    arquivo = models.FileField (upload_to = settings.MEDIA_ROOT, max_length=2000000, blank=True)
