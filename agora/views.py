@@ -18,6 +18,7 @@ from .models import Choice, Question, Answer, User, InitialListQuestion, Message
 from django.views.decorators.http import condition
 from .decorators import term_required
 from django.core.validators import URLValidator
+from .forms import DocumentForm
 
 
 @method_decorator(login_required(login_url='agora:login'), name='dispatch')
