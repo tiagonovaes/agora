@@ -1,0 +1,44 @@
+{% extends "admin/base_site.html" %}
+{% load set_var %}
+{% block content %}
+{% load inc %}
+
+
+
+     {% set tipo = 0 %}
+     {% set name = 0 %}
+
+     {% for object in objects|votos_distintos %}
+        {% set res = 0 %}
+        {% set a = object %}
+        {% if name = 0 %}
+            {{object.question}}</br></br>
+            {% set name = 1 %}
+        {% endif %}
+
+            {% for object in objects %}
+
+                {% if object.question.question_type == '1' %}
+                {% if a == object.choice %}
+                    {% ++ res %}
+                {% endif %}
+                {% endif %}
+
+                {% if object.question.question_type == '2' %}
+                {% if a == object.choice %}
+                    {% ++ res %}
+                {% endif %}
+                {% endif %}
+
+                {% if object.question.question_type == '3' %}
+                    {% set tipo = 1 %}
+                {% endif %}
+
+
+            {% set b = res %}
+            {% endfor %}
+        {{ a }} {% if tipo != 1 %}-{{ b }} {% endif %}</br>
+
+     {% endfor %}
+
+{% endblock %}
