@@ -33,6 +33,7 @@ class MeuEspacoArtigoView(generic.ListView):
     context['user'] = User.objects.get(user=self.request.user)
     context['nickname'] = u.nickname
     context['tags'] = tags
+    context['form'] = DocumentForm
     return context
 
   def get_queryset(self):
