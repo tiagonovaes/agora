@@ -31,16 +31,16 @@
 <body style="margin:0;padding:0;height:100%;">
   <div class="header-meu-espaco">
     {% if nickname %}
-    {{nickname}},
+    <strong>{{nickname}}</strong>,
     {% else %}
-    {{user.user.primeiro_nome}}{{user.primeiro_nome}},
+    <strong>{{user.user.primeiro_nome}}{{user.primeiro_nome}}</strong>,
     {% endif %}
     gostaria de sugerir artigos para leitura? Envie-nos através de um link ou faça upload de um arquivo pdf. Selecione também a categoria que o artigo se refere:
   </div>
 
   {% for message in messages %}
-  <div class="alert alert-{{ message.tags }} alert-dismissible fade in" style="text-align:center;width:60%;margin:0 auto;padding:5px;" role="alert">
-    <button type="button" style="width:60%:margin:0 auto;" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+  <div class="alert alert-{{ message.tags }} alert-dismissible fade in" style="text-align:center;width:80%;margin:0 auto;padding:5px;" role="alert">
+    <button type="button" style="width:80%:margin:0 auto;" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
     {{ message }}
   </div></br>
   {% endfor %}
