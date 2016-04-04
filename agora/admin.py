@@ -9,6 +9,7 @@ from django.utils import timezone
 from .models import Choice, Question, Answer, User, InitialListQuestion, Message, Termo, MeuEspacoArtigo
 from forum.models import User as ForumUser
 
+
 class ChoiceInline(admin.TabularInline):
     model = Choice
     extra = 0
@@ -16,7 +17,7 @@ class ChoiceInline(admin.TabularInline):
 class MessageAdmin(admin.ModelAdmin):
     actions=['publicar_no_mural','desfazer_publicacao_no_mural']
     fields = ['kind','message','publ_date']
-    list_display = ['kind','message','published','publ_date']
+    list_display = ['kind','message','published','publ_date','address']
 
     def publicar_no_mural(modeladmin, request, queryset):
             queryset.update(published = 'Sim')

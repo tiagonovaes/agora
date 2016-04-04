@@ -1,4 +1,4 @@
-﻿# -*- coding: utf-8 -*-
+﻿## -*- coding: utf-8 -*-
 from datetime import timedelta
 from django.contrib.auth.models import User as AuthUser
 from django.db import models
@@ -150,9 +150,6 @@ class User(models.Model):
          return super(User, self).save(*args, **kwargs)
       return super(User, self).save(*args, **kwargs)
 
-
-
-
 class Answer(models.Model):
   user = models.ForeignKey(User)
   question = models.ForeignKey(Question)
@@ -221,6 +218,7 @@ class Message(models.Model):
         kind = models.CharField('Tipo', max_length=1, choices = MESSAGE_TYPE)
         publ_date = models.DateTimeField('Data de publicação')
         message = models.CharField('Recado', max_length=500)
+        address = models.CharField('Endereço',max_length=200, blank=True)
 
 class Termo(models.Model):
     user = models.ForeignKey(User)

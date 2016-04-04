@@ -88,7 +88,9 @@ class ArticleAdmin(admin.ModelAdmin):
             x = Message(kind='1',message="Novo artigo inserido:{id}", published='Sim', publ_date=timezone.now())
             for title in queryset:
                 t = title.title
+                a = title.address
             x.message="Novo artigo inserido: {id}".format(id=t)
+            x.address = a
             x.save()
 
             return

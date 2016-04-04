@@ -5,16 +5,6 @@ from django.conf import settings
 from ckeditor.fields import RichTextField
 from ckeditor_uploader.fields import RichTextUploadingField
 from taggit.managers import TaggableManager
-from tinymce.models import HTMLField
-
-def position_det():
-    try:
-        tpc = Topico.objects.latest('position')
-    except (KeyError, Topico.DoesNotExist):
-        return 1
-    a = tpc.position
-    a = a + 1
-    return a
 
 class Article(models.Model):
 
@@ -45,24 +35,24 @@ class Article(models.Model):
 
 class Topico(models.Model):
 
-    topico = models.CharField(max_length=200)
-    address_topico = models.CharField(max_length=200)
-    position = models.IntegerField(default=position_det)
+  topico = models.CharField(max_length=200)
+  address_topico = models.CharField(max_length=200)
+  position = models.IntegerField(default=1)
 
-    def __str__(self):
-        return self.topico
+  def __str__(self):
+    return self.topico
 
-    def __int__(self):
-        return self.position
+  def __int__(self):
+    return self.position
 
-    class Meta:
-        verbose_name = 'Tópico'
-        verbose_name_plural = 'Tópicos'
+  class Meta:
+      verbose_name = 'Tópico'
+      verbose_name_plural = 'Tópicos'
 
-    def save(self, *args, **kwargs):
-        super(Topico, self).save(*args, **kwargs)
-        self.address_topico = "{SITE_URL}agora/pdpu/conheca/topicos/{id}".format(id=self.id,SITE_URL=settings.SITE_URL)
-        return super(Topico, self).save(*args, **kwargs)
+  def save(self, *args, **kwargs):
+      super(Topico, self).save(*args, **kwargs)
+      self.address_topico = "{SITE_URL}agora/pdpu/conheca/topicos/{id}".format(id=self.id,SITE_URL=settings.SITE_URL)
+      return super(Topico, self).save(*args, **kwargs)
 
 class SubTopico(models.Model):
   subtopico = models.ForeignKey(Topico, on_delete=models.CASCADE)
