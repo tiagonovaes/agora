@@ -1,4 +1,4 @@
-﻿# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 from django.contrib import admin
 from django.contrib.contenttypes.models import ContentType
 from django.core import serializers
@@ -92,7 +92,6 @@ class ArticleAdmin(admin.ModelAdmin):
             x.message="Novo artigo inserido: {id}".format(id=t)
             x.address = a
             x.save()
-
             return
 
     def desfazer_publicacao_na_pagina_principal(modeladmin, request, queryset):
