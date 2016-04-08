@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from django.conf.urls import include, url
 from django.contrib import admin
 from django.conf import settings
@@ -11,8 +10,8 @@ urlpatterns = [
   url(r'^agora/', include('conheca.urls')),
   url(r'^agora/', include('forum.urls')),
   url(r'^agora/', include('resultados.urls')),
+  url(r'^agora/', include('agoraunicamp.urls')),
   url(r'^admin/', admin.site.urls),
-
   url(r'^ckeditor/', include('ckeditor_uploader.urls')),
   url(r'^chaining/', include('smart_selects.urls')),
 

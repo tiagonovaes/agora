@@ -1,0 +1,68 @@
+{% extends 'agora/base.html' %}
+{% load staticfiles %}
+{% load set_var %}
+{% block content12 %}
+
+<div style="background:#ffffff" class="project-header-config"> Ágora Virtual - Configurações
+</div>
+
+<div class="plainlinks hlist" style="width:95%;border-top:1px solid black; padding-top:0.4em; margin:0 auto;"></div>
+
+<div style="height:100%;margin-bottom:200px;">
+  <div class="config-welcome"> Olá,
+    {% if nickname %}
+    {{nickname}}
+    {% else %}
+    {{user.primeiro_nome}}
+    {% endif %}
+    ! Gostaria de alterar o seu perfil?
+  </div>
+
+  {% for message in messages %}
+  <div id="config-message" class="alert alert-{{ message.tags }} alert-dismissible fade in" role="alert">
+    <button type="button" style="width:60%:margin:0 auto;" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    {{ message }}
+  </div></br>
+  {% endfor %}
+
+  <div class="form-inline-config">
+    <div class="item-config">Inclua um apelido (opcional):
+    </div>
+    <form class="form-config" action="{% url 'agoraunicamp:apelido-config' %}" method="post" role="form">
+      <input id="apelido" type="textarea" value="" name="text-apelido" placeholder="{{user.nickname}}" class="textarea-size-apelido">
+      <button class="button-margin" type="submit">Enviar</button>
+    </form>
+    <form action="{% url 'agoraunicamp:apelido-remove' %}" method="post" role="form" style="float:left;">
+      <button class="button-margin" type="submit">Remover apelido</button>
+    </form>
+  </div>
+
+  <div class="form-inline-config">
+  <form action="{% url 'agoraunicamp:email-config' %}" method="post" role="form">
+    <label class="item-config" for="email">Inclua um novo endereço de Email:</label>
+    <input class="textarea-size-email" placeholder="{{user.email}}" type="email" name="text-email">
+    <button class="button-margin" type="submit">Enviar</button>
+  </form>
+  </div>
+
+
+    <li>
+      <span class="back-agora"><a style="text-decoration:none;color:black;" href={% url 'agoraunicamp:agora' %}>Voltar - Ágora</span>
+    </li>
+
+
+</div>
+
+
+<script type="text/javascript">
+jQuery(function($) {
+  function resizeImage() {
+    var x = $(window).height();
+    $(".my-div").css("height", x * 0.75);
+  }
+  $(window).resize(resizeImage);
+  resizeImage();
+});
+</script>
+
+{% endblock content12 %}
