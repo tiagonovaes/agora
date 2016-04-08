@@ -1,0 +1,85 @@
+{% load staticfiles %}
+{% load set_var %}
+<!DOCTYPE html>
+<html style="height:100%;">
+<head>
+  <meta charset="UTF-8">
+  <title>Ágora Virtual - Unicamp</title>
+
+  <meta content="width=device-width, initial-scale=1, maximum-scale=3, user-scalable=yes" name="viewport">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+  <link href="{% static "agora/bootstrap/css/bootstrap.css" %}" rel="stylesheet">
+  <link href="{% static "agora/css/font-awesome.min.css" %}" rel="stylesheet" type="text/css"/>
+  <link href="{% static "agora/css/daterangepicker/daterangepicker-bs3.css" %}" rel="stylesheet" type="text/css"/>
+  <link href="{% static "agora/css/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css" %}" rel="stylesheet" type="text/css"/>
+  <link href="{% static "agora/css/AdminLTE.css" %}" rel="stylesheet" type="text/css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,100,300,500">
+  <link rel="stylesheet" href="{% static "agora/assets/bootstrap/css/bootstrap.min.css" %}">
+  <link rel="stylesheet" href="{% static "agora/assets/font-awesome/css/font-awesome.min.css" %}">
+  <link rel="stylesheet" href="{% static "agora/assets/css/form-elements.css" %}">
+  <link rel="shortcut icon" href="{% static "agora/assets/ico/favicon.png" %}">
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="{% static "agora/assets/ico/apple-touch-icon-144-precomposed.png" %}">
+  <link rel="apple-touch-icon-precomposed" sizes="114x114" href="{% static "agora/assets/ico/apple-touch-icon-114-precomposed.png" %}">
+  <link rel="apple-touch-icon-precomposed" sizes="72x72" href="{% static "agora/assets/ico/apple-touch-icon-72-precomposed.png" %}">
+  <link rel="apple-touch-icon-precomposed" href="{% static "agora/assets/ico/apple-touch-icon-57-precomposed.png" %}">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+</head>
+
+<body style="margin:0;padding:0;height:100%;">
+  <div class="header-meu-espaco">
+    {% if nickname %}
+    <strong>{{nickname}}</strong>,
+    {% else %}
+    <strong>{{user.user.primeiro_nome}}{{user.primeiro_nome}}</strong>,
+    {% endif %}
+    gostaria de nos enviar uma sugestão?
+  </div>
+
+  {% for message in messages %}
+  <div class="alert alert-{{ message.tags }} alert-dismissible fade in" style="text-align:center;width:80%;margin:0 auto;padding:5px;" role="alert">
+    <button type="button" style="width:80%:margin:0 auto;" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    {{ message }}
+  </div></br>
+  {% endfor %}
+
+  <form action="{% url 'agoraunicamp:envia-espaco-outros' %}" method="POST" role="form" enctype="multipart/form-data">
+    <div class="text-form-meu-espaco"> A qual categoria sua sugestão pertence?
+      <select id="categoria" name="categoriatag">
+        {% for tag in tags %}
+        <option value="{{tag}}"
+        {% if tag == categoriatag %}
+        selected
+        {% endif %}>
+        {{tag}}
+      </option>
+      {% endfor %}
+      <option value="outra">outra</option>
+    </select>
+  </div>
+
+  <div class="text-form-meu-espaco">
+    <label for="comment"> Comente: </label>
+    <textarea style="border-color:black;width:100%;border-width:1px;" class="form-control" rows="3" id="comment" name="comentario"></textarea>
+  </div>
+
+  <div class="text-form-meu-espaco">
+    <label for="link">Link:</label>
+    <textarea style="border-color:black;width:100%;border-width:1px;" class="form-control" rows="1" id="link" name="link"></textarea>
+  </div>
+
+  <div class="text-form-meu-espaco">
+    {% csrf_token %}
+    {{ form.arquivo.label_tag }}
+    {{ form.arquivo.errors }}
+    {{ form.arquivo }}
+  </div>
+
+  <div class="text-form-meu-espaco">
+    <input style="float:right;" type="submit" value="Enviar dados" />
+  </div>
+</form>
+</body>
+</html>
