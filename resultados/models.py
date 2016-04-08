@@ -2,7 +2,6 @@
 from django.db import models
 from django.utils import timezone
 from taggit.managers import TaggableManager
-from tinymce.models import HTMLField
 from ckeditor.fields import RichTextField
 from ckeditor_uploader.fields import RichTextUploadingField
 from agora.models import Question
@@ -34,7 +33,7 @@ class Relatorio(models.Model):
 
     def save(self, *args, **kwargs):
         super(Relatorio, self).save(*args, **kwargs)
-        self.address = "{SITE_URL}agora/pdpu/resultados/relatorio/{id}".format(id=self.id, SITE_URL=settings.SITE_URL)
+        self.address = "{SITE_URL}agora/resultados/relatorio/{id}".format(id=self.id, SITE_URL=settings.SITE_URL)
         return super(Relatorio, self).save(*args, **kwargs)
 
 class Likedislike(models.Model):

@@ -5,7 +5,8 @@ from django.utils import timezone
 from django.http import HttpResponseRedirect
 from django.core import serializers
 from django.contrib.contenttypes.models import ContentType
-from agora.models import Question, Message
+from agora.models import Question
+from agoraunicamp.models import Message
 
 
 class Relatorio_geralAdmin(admin.ModelAdmin):
