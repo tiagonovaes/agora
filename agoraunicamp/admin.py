@@ -42,7 +42,7 @@ class MessageAdmin(admin.ModelAdmin):
             return
 
     def desfazer_publicacao_no_mural(modeladmin, request, queryset):
-            queryset.update(published = 'Não')
+            queryset.update(published = 'Nao')
             return
 
 

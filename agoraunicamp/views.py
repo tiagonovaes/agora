@@ -187,7 +187,7 @@ class TermoView(generic.ListView):
 @method_decorator(login_required(login_url='agora:login'), name='dispatch')
 @method_decorator(term_required, name='dispatch')
 class PaginaInicialView(generic.ListView):
-  """PDPU home with it's subpages"""
+  #"""PDPU home with it's subpages"""
   template_name = 'agoraunicamp/agora-pagina-inicial.html'
 
   def get_queryset(self):
@@ -282,7 +282,7 @@ def term_accepted(request):
     cond.delete()
     cond1 = Termo(user=user,condition='Sim')
     cond1.save()
-    return HttpResponseRedirect(reverse('agora:home'))
+    return HttpResponseRedirect(reverse('agoraunicamp:agora'))
 
 def term_not_accepted(request):
     return HttpResponseRedirect(reverse('agoraunicamp:login'))
