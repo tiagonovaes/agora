@@ -10,7 +10,6 @@ from django.core.exceptions import ObjectDoesNotExist
 from agoraunicamp.models import User, Message, Projeto
 
 #projeto
-
 def getProject():
     try:
         choices =[ (o.sigla, o.sigla) for o in Projeto.objects.all()]
@@ -111,8 +110,6 @@ class Choice(models.Model):
   class Meta:
     verbose_name = 'escolha'
     verbose_name_plural = 'escolhas'
-
-
 
 class InitialListQuestion(models.Model):
     projeto = models.CharField('Projeto', max_length=50, blank=False, choices = getProject())
