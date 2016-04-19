@@ -1,135 +1,261 @@
 # -*- coding: utf-8 -*-
-from datetime import timedelta
+from django.contrib import messages
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User as AuthUser
+from django.core.urlresolvers import reverse
 from django.db import models
+from django.http import HttpResponseRedirect
+from django.shortcuts import get_object_or_404, render,render_to_response,redirect
 from django.utils import timezone
-from taggit.managers import TaggableManager
-from forum.models import User as Userf
-from django.conf import settings
-from django.core.exceptions import ObjectDoesNotExist
-from agoraunicamp.models import User, Message
-
-#projeto
-
-
-class Question(models.Model):
-    STATUS_CHOICES = (
-        ('n', 'Não publicado'), # unpublished
-        ('p', 'Publicado'),     # published
-    )
-
-    EXP_TIME = (
-        (1, '1 dia'),           # a day
-        (7, '1 semana'),        # a week
-        (30, '1 mês'),          # a month
-        (365, '1 ano'),         # a year
-        (3650, 'Indeterminado') # undetermined
-    )
-
-    QUESTION_TYPE = (
-        ('1', 'One choice'),
-        ('2', 'Multipla Escolha'),
-        ('3', 'Texto'),
-    )
-
-    projeto = models.ForeignKey('projetos.Projeto')
-    question_type = models.CharField('Tipo', max_length=1, choices = QUESTION_TYPE)
-    question_text = models.CharField('Título da Questão',max_length=200)
-    publ_date = models.DateTimeField('Data de publicação')
-    exp_date = models.DateTimeField('Data de expiração')
-    days = models.IntegerField('Tempo para expirar', choices=EXP_TIME, default=3650)
-    question_status = models.CharField('Estado da questão', max_length=1, choices=STATUS_CHOICES, default = 'n')
-    answer_status = models.CharField('Estado da resposta', max_length=1, choices=STATUS_CHOICES, default = 'n')
-    image = models.ImageField('Imagem', upload_to='question_images', blank=True, null=True)
-    tags = TaggableManager()
-    address = models.CharField('Endereço',max_length=200)
-    permissao = models.IntegerField(default=0)
-    resultado = models.CharField(max_length=1, choices=STATUS_CHOICES , default = 'n')
+from django.utils.decorators import method_decorator
+from django.views import generic
+from conheca.models import Article
+from resultados.models import Relatorio
+from taggit.models import Tag
+from itertools import chain
+from .models import Choice, Question, InitialListQuestion
+from django.views.decorators.http import condition
+from agoraunicamp.decorators import term_required
+from django.core.validators import URLValidator
+from django.core.exceptions import ValidationError
+from agoraunicamp.models import User, Termo, Answer
+from projetos.models import Projeto
 
 
-    def __str__(self):
-        if self.id:
-            return "#{id} - {question}".format(id=self.id, question=self.question_text)
-        else:
-            return self.question_text
+#PROJETO
+@method_decorator(login_required(login_url='agora:login'), name='dispatch')
+@method_decorator(term_required, name='dispatch')
+class ParticipeView(generic.ListView):
+  template_name = 'agora/participe.html'
+  model = Question
 
-    def save(self, *args, **kwargs):
-        """On save, update timestamps"""
-        if not self.id:
-            self.publ_date = timezone.now()
-        self.update_expiration_time()
-        super(Question, self).save(*args, **kwargs)
-        self.address = "{SITE_URL}agora/participe/{id}".format(id=self.id,SITE_URL=settings.SITE_URL)
-        return super(Question, self).save(*args, **kwargs)
+  def get_queryset(self):
+    u = User.objects.get(user=self.request.user)
+    return Question.objects.filter(publ_date__lte=timezone.now(),projeto__sigla=u.projeto).order_by('-publ_date')
 
-    def update_expiration_time(self):
-        self.exp_date = self.publ_date + timedelta(days=self.days)
-
-    def is_question_expired(self):
-        return self.exp_date <= timezone.now()
-
-    def is_question_published(self):
-        if self.is_question_expired():
-            self.question_status = 'n'
-        if self.question_status == 'p':
-            return True
-        else:
-            return False
-
-    is_question_published.boolean = True
-    is_question_published.short_description = 'Questão publicada?'
-
-    def is_answer_published(self):
-        if self.answer_status == 'p':
-            return True
-        else:
-            return False
-
-    is_answer_published.boolean = True
-    is_answer_published.short_description = 'Resposta publicada?'
+  def get_context_data(self, **kwargs):
+    context = super(ParticipeView, self).get_context_data(**kwargs)
+    user = User.objects.get(user=self.request.user)
+    questions = Question.objects.filter(exp_date__gt=timezone.now(),question_status='p',projeto__sigla=user.projeto)
+    answered = Answer.objects.filter(user=user)
+    answered_questions = [a.question for a in answered]
+    projeto_nome = Projeto.objects.filter(sigla=user.projeto).first()
+    context['not_answered'] = list(set(questions) - set(answered_questions))
+    context['not_answered'].reverse()
+    context['nickname'] = user.nickname
+    context['projeto'] = projeto_nome.projeto
+    context['sigla'] = user.projeto
+    return context
 
 
+@method_decorator(login_required(login_url='agora:login'), name='dispatch')
+@method_decorator(term_required, name='dispatch')
+class DetailView(generic.DetailView):
+  model = Question
+  template_name = 'agora/question-page.html'
 
-    class Meta:
-        verbose_name = 'questão'
-        verbose_name_plural = 'questões'
+  def get_context_data(self, **kwargs):
+    context = super(DetailView, self).get_context_data(**kwargs)
+    u = User.objects.get(user=self.request.user)
+    context['user'] = User.objects.get(user=self.request.user)
+    context['nickname'] = u.nickname
+    return context
 
-#projeto-foregnkey
-class Choice(models.Model):
-  question = models.ForeignKey(Question, on_delete=models.CASCADE)
-  choice_text = models.CharField(max_length=200)
 
-  def __str__(self):
-    return self.choice_text
+def vote(request, question_id):
+  question = get_object_or_404(Question, pk=question_id)
+  username = AuthUser.objects.get(username=request.user)
+  user = username.user
+  question_type = question.question_type
+  success = False
+  # Query over the voted questions
+  answered_question = Answer.objects.filter(user=user, question=question).count()
+  if answered_question:
+    error_message = 'Você já votou nesta questão.'
+    messages.error(request, error_message)
+    return HttpResponseRedirect(reverse('agora:pdpu-participe'))
+  try:
+    # Save the answer
+    if question_type == '1':
+      answer = question.choice_set.get(pk=request.POST['choice'])
+      if answer:
+        answer_model = Answer(user=user, question=question, choice=answer)
+        answer_model.save()
+        success = True
+      else:
+        error_message = "Parece que você não selecionou nenhuma opção. Por favor, tente novamente."
+    elif question_type == '2':
+      answer = request.POST.getlist('choice')
+      if answer:
+        for choice_id in answer:
+          choice = question.choice_set.get(pk=choice_id)
+          answer_model = Answer(user=user, question=question, choice=choice)
+          answer_model.save()
+        success = True
+      else:
+        error_message = "Parece que você não selecionou nenhuma opção. Por favor, tente novamente."
+    elif question_type == '3':
+      answer = request.POST['text']
+      if answer:
+        answer_model = Answer(user=user, question=question, text=answer)
+        answer_model.save()
+        success = True
+      else:
+        error_message = "Parece que você deixou o campo em branco. Por favor, tente novamente."
+    if success == True:
+      messages.success(request, "Obrigado por participar!")
+    else:
+      messages.error(request, error_message)
+    return HttpResponseRedirect(reverse('agora:pdpu-participe'))
+  except (KeyError, Choice.DoesNotExist):
+    messages.error(request, "Parece que você não selecionou nenhuma opção. Por favor, tente novamente.")
+    return HttpResponseRedirect(reverse('agora:pdpu-participe'))
 
-  class Meta:
-    verbose_name = 'escolha'
-    verbose_name_plural = 'escolhas'
+def vote_iframe(request, question_id):
 
-class InitialListQuestion(models.Model):
-    projeto = models.ForeignKey('projetos.Projeto')
-    name = models.CharField('Nome da lista', max_length=50)
-    questions = TaggableManager('Questões')
-    select = models.IntegerField(default=0)
+  question = get_object_or_404(Question, pk=question_id)
+  username = AuthUser.objects.get(username=request.user)
+  user = username.user
+  question_type = question.question_type
+  success = False
+  # Query over the voted questions
+  answered_question = Answer.objects.filter(user=user, question=question).count()
+  if answered_question:
+    error_message = 'Você já votou nesta questão.'
+    messages.error(request, error_message)
+    return HttpResponseRedirect(reverse('agora:home'))
+  try:
+    # Save the answer
+    if question_type == '1':
+      answer = question.choice_set.get(pk=request.POST['choice'])
+      if answer:
+        answer_model = Answer(user=user, question=question, choice=answer)
+        answer_model.save()
+        success = True
+      else:
+        error_message = "Parece que você não selecionou nenhuma opção. Por favor, tente novamente."
+    elif question_type == '2':
+      answer = request.POST.getlist('choice')
+      if answer:
+        for choice_id in answer:
+          choice = question.choice_set.get(pk=choice_id)
+          answer_model = Answer(user=user, question=question, choice=choice)
+          answer_model.save()
+        success = True
+      else:
+        error_message = "Parece que você não selecionou nenhuma opção. Por favor, tente novamente."
+    elif question_type == '3':
+      answer = request.POST['text']
+      if answer:
+        answer_model = Answer(user=user, question=question, text=answer)
+        answer_model.save()
+        success = True
+      else:
+        error_message = "Parece que você deixou o campo em branco. Por favor, tente novamente."
+    if success == True:
+      messages.success(request, "Obrigado por participar!")
+    else:
+      messages.error(request, error_message)
+    return HttpResponseRedirect(reverse('agora:home'))
+  except (KeyError, Choice.DoesNotExist):
+    messages.error(request, "Parece que você não selecionou nenhuma opção. Por favor, tente novamente.")
+    return HttpResponseRedirect(reverse('agora:home'))
 
-    def __str__(self):
-        return self.name
+def vote_initial(request, question_id):
+  question = get_object_or_404(Question, pk=question_id)
+  username = AuthUser.objects.get(username=request.user)
+  user = username.user
+  question_type = question.question_type
+  success = False
+  # Query over the voted questions
+  answered_question = Answer.objects.filter(user=user, question=question).count()
+  if answered_question:
+    error_message = 'Você já votou nesta questão.'
+    messages.error(request, error_message)
+    return redirect(request.META['HTTP_REFERER']+"#question%s"%(question_id))
+  try:
+    # Save the answer
+    if question_type == '1':
+      answer = question.choice_set.get(pk=request.POST['choice'])
+      if answer:
+        answer_model = Answer(user=user, question=question, choice=answer)
+        answer_model.save()
+        success = True
+      else:
+        error_message = "Parece que você não selecionou nenhuma opção. Por favor, tente novamente."
+    elif question_type == '2':
+      answer = request.POST.getlist('choice')
+      if answer:
+        for choice_id in answer:
+          choice = question.choice_set.get(pk=choice_id)
+          answer_model = Answer(user=user, question=question, choice=choice)
+          answer_model.save()
+        success = True
+      else:
+        error_message = "Parece que você não selecionou nenhuma opção. Por favor, tente novamente."
+    elif question_type == '3':
+      answer = request.POST['text']
+      if answer:
+        answer_model = Answer(user=user, question=question, text=answer)
+        answer_model.save()
+        success = True
+      else:
+        error_message = "Parece que você deixou o campo em branco. Por favor, tente novamente."
+    if success == True:
+      messages.success(request, "Obrigado por participar!")
+    else:
+      messages.error(request, error_message)
+    return redirect(request.META['HTTP_REFERER']+"#question%s"%(question_id))
+  except (KeyError, Choice.DoesNotExist):
+    messages.error(request, "Parece que você não selecionou nenhuma opção. Por favor, tente novamente.")
+    return redirect(request.META['HTTP_REFERER']+"#question%s"%(question_id))
 
-    def __int__(self):
-        return self.select
-
-    def is_list_active(self):
-        if self.select == 1:
-            return True
-        else:
-            return False
-
-    def split_questions(self):
-        return self.questions.split(',')
-
-    is_list_active.boolean = True
-    is_list_active.short_description = 'Lista ativa?'
-
-    class Meta:
-        verbose_name = 'Lista de Questões para o Home'
-        verbose_name_plural = 'Lista de Questões para o Home'
+def vote_timeline(request, question_id):
+  question = get_object_or_404(Question, pk=question_id)
+  username = AuthUser.objects.get(username=request.user)
+  user = username.user
+  question_type = question.question_type
+  success = False
+  # Query over the voted questions
+  answered_question = Answer.objects.filter(user=user, question=question).count()
+  if answered_question:
+    error_message = 'Você já votou nesta questão.'
+    messages.error(request, error_message)
+    return HttpResponseRedirect(reverse('agora:pdpu'))
+  try:
+    # Save the answer
+    if question_type == '1':
+      answer = question.choice_set.get(pk=request.POST['choice'])
+      if answer:
+        answer_model = Answer(user=user, question=question, choice=answer)
+        answer_model.save()
+        success = True
+      else:
+        error_message = "Parece que você não selecionou nenhuma opção. Por favor, tente novamente."
+    elif question_type == '2':
+      answer = request.POST.getlist('choice')
+      if answer:
+        for choice_id in answer:
+          choice = question.choice_set.get(pk=choice_id)
+          answer_model = Answer(user=user, question=question, choice=choice)
+          answer_model.save()
+        success = True
+      else:
+        error_message = "Parece que você não selecionou nenhuma opção. Por favor, tente novamente."
+    elif question_type == '3':
+      answer = request.POST['text']
+      if answer:
+        answer_model = Answer(user=user, question=question, text=answer)
+        answer_model.save()
+        success = True
+      else:
+        error_message = "Parece que você deixou o campo em branco. Por favor, tente novamente."
+    if success == True:
+      messages.success(request, "Obrigado por participar!")
+    else:
+      messages.error(request, error_message)
+    return HttpResponseRedirect(reverse('agora:pdpu'))
+  except (KeyError, Choice.DoesNotExist):
+    messages.error(request, "Parece que você não selecionou nenhuma opção. Por favor, tente novamente.")
+    return HttpResponseRedirect(reverse('agora:pdpu'))
