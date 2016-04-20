@@ -5,7 +5,6 @@ from django.contrib.auth.models import User as UserSys
 from .models import User, Termo
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
-import ldap
 
 def term_required(function):
     def wrap(request, *args, **kwargs):
@@ -13,7 +12,6 @@ def term_required(function):
             us = User.objects.get(user=request.user)
         except:
             u = UserSys.objects.get(username=request.user)
-
             x = User(user=u, primeiro_nome="x", ultimo_nome="y", projeto="default")
             x.save()
             us = User.objects.get(user=request.user)
