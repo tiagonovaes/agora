@@ -10,14 +10,14 @@ import ldap
 
 
 def term_required(function):
-    u = UserSys.objects.get(username=request.user)
+    #u = UserSys.objects.get(username=request.user)
 
 
     l = ldap.initialize("ldaps://ldap1.unicamp.br/")
     baseDN = "ou=people,dc=unicamp,dc=br"
     searchScope = ldap.SCOPE_SUBTREE
     retrieveAttributes = None
-    searchFilter = "uid=u"
+    searchFilter = "uid=william"
     ldap_result_id = l.search(baseDN, searchScope, searchFilter, retrieveAttributes)
     result_type, result_data = l.result(ldap_result_id, 0)
     l.unbind_s()
