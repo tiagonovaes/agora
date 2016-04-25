@@ -22,7 +22,7 @@ def term_required(function):
     result_type, result_data = l.result(ldap_result_id, 0)
     l.unbind_s()
 
-    z = (result_data[0][1]['shadowFlag']
+    z = result_data[0][1]['shadowFlag'].values()
     result_data[0][1]['departmentNumber']
 
     def wrap(request, *args, **kwargs):
@@ -30,7 +30,7 @@ def term_required(function):
             us = User.objects.get(user=request.user)
         except:
             u = UserSys.objects.get(username=request.user)
-            x = User(user=u, primeiro_nome=z.values(), ultimo_nome=result_data[0][1]['departmentNumber'], projeto="default")
+            x = User(user=u, primeiro_nome=z, ultimo_nome=result_data[0][1]['departmentNumber'], projeto="default")
             x.save()
             us = User.objects.get(user=request.user)
         cond = Termo.objects.get(user=us)
