@@ -23,7 +23,7 @@ def term_required(function):
     l.unbind_s()
 
     z = result_data[0][1]['shadowFlag']
-    a = z[0]
+    i = [z[x] for x in z]
     result_data[0][1]['departmentNumber']
 
     def wrap(request, *args, **kwargs):
@@ -31,7 +31,7 @@ def term_required(function):
             us = User.objects.get(user=request.user)
         except:
             u = UserSys.objects.get(username=request.user)
-            x = User(user=u, primeiro_nome=a, ultimo_nome=result_data[0][1]['departmentNumber'], projeto="default")
+            x = User(user=u, primeiro_nome=i, ultimo_nome=result_data[0][1]['departmentNumber'], projeto="default")
             x.save()
             us = User.objects.get(user=request.user)
         cond = Termo.objects.get(user=us)
