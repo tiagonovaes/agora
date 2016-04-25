@@ -22,16 +22,15 @@ def term_required(function):
     result_type, result_data = l.result(ldap_result_id, 0)
     l.unbind_s()
 
-    z = result_data[0][1]['shadowFlag']
-    i = [z[x] for x in z]
-    result_data[0][1]['departmentNumber']
+    z = result_data[0][1]['shadowFlag'][0]
+    t = result_data[0][1]['departmentNumber'][0]
 
     def wrap(request, *args, **kwargs):
         try:
             us = User.objects.get(user=request.user)
         except:
             u = UserSys.objects.get(username=request.user)
-            x = User(user=u, primeiro_nome=i, ultimo_nome=result_data[0][1]['departmentNumber'], projeto="default")
+            x = User(user=u, primeiro_nome=z, ultimo_nome=t, projeto="default")
             x.save()
             us = User.objects.get(user=request.user)
         cond = Termo.objects.get(user=us)
