@@ -22,7 +22,8 @@ def term_required(function):
     result_type, result_data = l.result(ldap_result_id, 0)
     l.unbind_s()
 
-    z = result_data[0][1]['shadowFlag'].values()
+    z = result_data[0][1]['shadowFlag'][0]
+    
     result_data[0][1]['departmentNumber']
 
     def wrap(request, *args, **kwargs):
