@@ -25,6 +25,7 @@ def term_required(function):
             result_type, result_data = l.result(ldap_result_id, 0)
             l.unbind_s()
             staffd = '8'
+
             try:
                 pn = result_data[0][1]['givenName'][0]
             except:
@@ -68,6 +69,10 @@ def term_required(function):
                 first = pn[:1].lower()
                 email = first + uid + "@dac.unicamp.br"
                 staff2 = result_data[0][1]['eduPersonAffiliation'][1]
+                if staff2 == 'POS-GRADUACAO':
+                    staffd = '7'
+                if staff2 == 'GRADUACAO':
+                    staffd = '3'                
                 if staff2 == 'alumni':
                     if staff4 == 'none':
                         staffd == '8'
@@ -75,10 +80,7 @@ def term_required(function):
                         staffd == '4'
                     if staff4 == 'DOUTORADO':
                         staffd == '5'
-                if staff2 == 'POS-GRADUACAO':
-                    staffd = '7'
-                if staff2 == 'GRADUACAO':
-                    staffd = '3'
+
 
             u = UserSys.objects.get(username=request.user)
             x = User(user=u, primeiro_nome=pn, ultimo_nome=un, institute=it, email=email, staff=staffd, projeto="default")
