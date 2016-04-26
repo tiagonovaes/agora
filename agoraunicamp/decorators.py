@@ -50,6 +50,11 @@ def term_required(function):
             except:
                 staff = '8'
 
+            try:
+                staff4 = result_data[0][1]['eduPersonAffiliation'][2]
+            except:
+                staff4 = 'none'
+
 
             if staff == 'faculty':
                 staffd = '1'
@@ -68,6 +73,8 @@ def term_required(function):
                 if staff2 == "GRADUACAO":
                     staffd = '3'
                 if staff2 == 'alumni':
+                    staffd = '8'
+                if staff2 == 'alumni' and staff4 == 'DOUTORADO':
                     staffd = '5'
                 if staff2 == 'POS-GRADUACAO':
                     staffd = '7'
