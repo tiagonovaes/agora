@@ -24,7 +24,7 @@ def term_required(function):
             ldap_result_id = l.search(baseDN, searchScope, searchFilter, retrieveAttributes)
             result_type, result_data = l.result(ldap_result_id, 0)
             l.unbind_s()
-
+            staffd = '8'
             try:
                 pn = result_data[0][1]['givenName'][0]
             except:
