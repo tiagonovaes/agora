@@ -50,7 +50,7 @@ def term_required(function):
                 staffd = '3'
             if staff2 == 'alumni':
                 staff3 = result_data[0][1]['eduPersonAffiliation'][2]
-                if staff2 == "DOUTORADO":
+                if staff3 == "DOUTORADO":
                     staffd = '5'
 
 
