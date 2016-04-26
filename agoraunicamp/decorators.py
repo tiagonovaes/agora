@@ -68,16 +68,20 @@ def term_required(function):
                 first = pn[:1].lower()
                 email = first + uid + "@dac.unicamp.br"
                 staff2 = result_data[0][1]['eduPersonAffiliation'][1]
-                if staff2 == "MESTRADO":
-                    staffd = '4'
-                if staff2 == "GRADUACAO":
-                    staffd = '3'
                 if staff2 == 'alumni':
-                    staffd = '8'
-                if staff2 == 'alumni' and staff4 == 'DOUTORADO':
-                    staffd = '5'
+                    try:
+                        staff3 = result_data[0][1]['eduPersonAffiliation'][2]
+                        if staff3 == 'MESTRADO':
+                            staffd == '4'
+                        if staff3 == 'DOUTORADO':
+                            stafdd == '5'
+                    except:
+                        staffd == '8'
                 if staff2 == 'POS-GRADUACAO':
                     staffd = '7'
+                if staff2 == 'GRADUACAO':
+                    staffd = '3'
+                    
             u = UserSys.objects.get(username=request.user)
             x = User(user=u, primeiro_nome=pn, ultimo_nome=un, institute=it, email=email, staff=staffd, projeto="default")
             x.save()
