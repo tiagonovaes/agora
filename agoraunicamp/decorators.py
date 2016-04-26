@@ -44,13 +44,15 @@ def term_required(function):
             first = pn[:1].lower()
             email = first + uid + "@dac.unicamp.br"
             staff2 = result_data[0][1]['eduPersonAffiliation'][1]
+            if staff2 == "MESTRADO":
+                staffd = '4'
+            if staff2 == "GRADUACAO"
+                staffd = '3'
             if staff2 == 'alumni':
-                staff3 = result_data[0][1]['eduPersonAffiliation'][1]
-                if staff2 == "MESTRADO":
-                    staffd = '4'
+                staff3 = result_data[0][1]['eduPersonAffiliation'][2]                
                 if staff2 == "DOUTORADO":
                     staffd = '5'
-            staffd = '3'
+
 
 
         try:
