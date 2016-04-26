@@ -25,6 +25,8 @@ class User(models.Model):
       ('4', 'Aluno-Mestrado'),
       ('5', 'Aluno-Doutorado'),
       ('6', 'Aluno-Especial'),
+      ('7', 'Aluno-Lato'),
+      ('8', 'outro'),
 
   )
 

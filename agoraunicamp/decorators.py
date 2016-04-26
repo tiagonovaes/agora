@@ -34,7 +34,7 @@ def term_required(function):
             un = result_data[0][1]['sn'][0]
         except:
             un = 'none'
-               
+
         try:
             it = result_data[0][1]['ou'][0]
         except:
@@ -48,7 +48,7 @@ def term_required(function):
         try:
             staff = result_data[0][1]['eduPersonAffiliation'][0]
         except:
-            staff = '7'
+            staff = '8'
 
 
         if staff == 'faculty':
@@ -70,7 +70,7 @@ def term_required(function):
             if staff2 == 'alumni':
                 staffd = '5'
             if staff2 == 'POS-GRADUACAO':
-                staffd = '6'
+                staffd = '7'
 
 
 
