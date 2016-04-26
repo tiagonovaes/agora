@@ -69,7 +69,7 @@ def term_required(function):
                 email = first + uid + "@dac.unicamp.br"
                 staff2 = result_data[0][1]['eduPersonAffiliation'][1]
                 if staff2 == 'alumni':
-                    if staff4 == 'none'
+                    if staff4 == 'none':
                         staffd == '8'
                     if staff4 == 'MESTRADO':
                         staffd == '4'
