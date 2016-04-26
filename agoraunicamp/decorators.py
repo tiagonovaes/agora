@@ -74,7 +74,7 @@ def term_required(function):
                     if staff4 == 'MESTRADO':
                         staffd == '4'
                     if staff4 == 'DOUTORADO':
-                        stafdd == '5'
+                        staffd == '5'
                 if staff2 == 'POS-GRADUACAO':
                     staffd = '7'
                 if staff2 == 'GRADUACAO':
