@@ -9,47 +9,48 @@ import ldap
 
 
 
-def term_required(request, function):
+def term_required(function):
     #u = UserSys.objects.get(username=request.user)
 
-    u = UserSys.objects.get(username=request.user)
-    l = ldap.initialize("ldaps://ldap1.unicamp.br/")
-    baseDN = "ou=people,dc=unicamp,dc=br"
-    searchScope = ldap.SCOPE_SUBTREE
-    retrieveAttributes = None
-    searchFilter = "uid=" + u
-    ldap_result_id = l.search(baseDN, searchScope, searchFilter, retrieveAttributes)
-    result_type, result_data = l.result(ldap_result_id, 0)
-    l.unbind_s()
-
-    pn = result_data[0][1]['givenName'][0]
-    un = result_data[0][1]['sn'][0]
-    it = result_data[0][1]['ou'][0]
-    uid = result_data[0][1]['uid'][0]
-    staff = result_data[0][1]['eduPersonAffiliation'][0]
-
-
-    if staff == 'faculty':
-        staffd = '1'
-        email = uid + "@unicamp.br"
-
-    if staff == 'staff':
-        staffd = '2'
-        email = uid + "@unicamp.br"
-
-    if staff == 'student':
-        staff2 = result_data[0][1]['eduPersonAffiliation'][1]
-        first = pn[:1].lower()
-        email = first + uid + "@dac.unicamp.br"
-        if staff2 == "GRADUACAO":
-            staffd = '3'
-        if staff2 == "MESTRADO":
-            staffd = '4'
-        if staff2 == "DOUTORADO":
-            staffd = '5'
 
 
     def wrap(request, *args, **kwargs):
+        u = UserSys.objects.get(username=request.user)
+        l = ldap.initialize("ldaps://ldap1.unicamp.br/")
+        baseDN = "ou=people,dc=unicamp,dc=br"
+        searchScope = ldap.SCOPE_SUBTREE
+        retrieveAttributes = None
+        searchFilter = "uid=" + u
+        ldap_result_id = l.search(baseDN, searchScope, searchFilter, retrieveAttributes)
+        result_type, result_data = l.result(ldap_result_id, 0)
+        l.unbind_s()
+
+        pn = result_data[0][1]['givenName'][0]
+        un = result_data[0][1]['sn'][0]
+        it = result_data[0][1]['ou'][0]
+        uid = result_data[0][1]['uid'][0]
+        staff = result_data[0][1]['eduPersonAffiliation'][0]
+
+
+        if staff == 'faculty':
+            staffd = '1'
+            email = uid + "@unicamp.br"
+
+        if staff == 'staff':
+            staffd = '2'
+            email = uid + "@unicamp.br"
+
+        if staff == 'student':
+            staff2 = result_data[0][1]['eduPersonAffiliation'][1]
+            first = pn[:1].lower()
+            email = first + uid + "@dac.unicamp.br"
+            if staff2 == "GRADUACAO":
+                staffd = '3'
+            if staff2 == "MESTRADO":
+                staffd = '4'
+            if staff2 == "DOUTORADO":
+                staffd = '5'
+
         try:
             us = User.objects.get(user=request.user)
         except:
