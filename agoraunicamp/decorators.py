@@ -41,11 +41,11 @@ def term_required(function):
         staff2 = result_data[0][1]['eduPersonAffiliation'][1]
         first = pn[:1].lower()
         email = first + uid + "@dac.unicamp.br"
-        if staff2 = "GRADUACAO":
+        if staff2 == "GRADUACAO":
             staffd = '3'
-        if staff2 = "MESTRADO":
+        if staff2 == "MESTRADO":
             staffd = '4'
-        if staff2 = "DOUTORADO":
+        if staff2 == "DOUTORADO":
             staffd = '5'
 
 
