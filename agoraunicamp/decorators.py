@@ -9,7 +9,7 @@ import ldap
 
 
 
-def term_required(function):
+def term_required(request, function):
     #u = UserSys.objects.get(username=request.user)
 
     u = UserSys.objects.get(username=request.user)
