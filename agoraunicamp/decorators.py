@@ -25,11 +25,30 @@ def term_required(function):
         result_type, result_data = l.result(ldap_result_id, 0)
         l.unbind_s()
 
-        pn = result_data[0][1]['givenName'][0]
-        un = result_data[0][1]['sn'][0]
-        it = result_data[0][1]['ou'][0]
-        uid = result_data[0][1]['uid'][0]
-        staff = result_data[0][1]['eduPersonAffiliation'][0]
+        try:
+            pn = result_data[0][1]['givenName'][0]
+        except:
+            pn = 'none'
+
+        try:
+            un = result_data[0][1]['sn'][0]
+        except:
+            un = 'none'
+               
+        try:
+            it = result_data[0][1]['ou'][0]
+        except:
+            it = 'none'
+
+        try:
+            uid = result_data[0][1]['uid'][0]
+        except:
+            uid = '00000'
+
+        try:
+            staff = result_data[0][1]['eduPersonAffiliation'][0]
+        except:
+            staff = '7'
 
 
         if staff == 'faculty':
@@ -50,6 +69,8 @@ def term_required(function):
                 staffd = '3'
             if staff2 == 'alumni':
                 staffd = '5'
+            if staff2 == 'POS-GRADUACAO':
+                staffd = '6'
 
 
 
