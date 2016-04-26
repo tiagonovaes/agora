@@ -41,15 +41,17 @@ def term_required(function):
             email = uid + "@unicamp.br"
 
         if staff == 'student':
-            staff2 = result_data[0][1]['eduPersonAffiliation'][2]
             first = pn[:1].lower()
             email = first + uid + "@dac.unicamp.br"
-            if staff2 == "GRADUACAO":
-                staffd = '3'
-            if staff2 == "MESTRADO":
-                staffd = '4'
-            if staff2 == "DOUTORADO":
-                staffd = '5'
+            staff2 = result_data[0][1]['eduPersonAffiliation'][1]
+            if staff2 == 'alumni':
+                staff3 = result_data[0][1]['eduPersonAffiliation'][1]
+                if staff2 == "MESTRADO":
+                    staffd = '4'
+                if staff2 == "DOUTORADO":
+                    staffd = '5'
+            staffd = '3'
+
 
         try:
             us = User.objects.get(user=request.user)
