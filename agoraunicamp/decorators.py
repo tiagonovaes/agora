@@ -49,9 +49,7 @@ def term_required(function):
             if staff2 == "GRADUACAO":
                 staffd = '3'
             if staff2 == 'alumni':
-                staff3 = result_data[0][1]['eduPersonAffiliation'][2]
-                if staff3 == "DOUTORADO":
-                    staffd = '5'
+                staffd = '5'
 
 
 
