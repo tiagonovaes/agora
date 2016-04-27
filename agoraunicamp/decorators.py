@@ -78,12 +78,12 @@ def term_required(function):
                 if staff2 == 'GRADUACAO':
                     staffd = '3'
                 if staff2 == 'alumni':
-                    #if staff4 == 'none':
-                        #staffd == '8'
-                    #if staff4 == 'MESTRADO':
-                    staffd == '4'
-                    #if staff4 == 'DOUTORADO':
-                        #staffd == '5'
+                    if staff4 == 'none':
+                        staffd = '8'
+                    if staff4 == 'MESTRADO':
+                        staffd = '4'
+                    if staff4 == 'DOUTORADO':
+                        staffd = '5'
 
 
             u = UserSys.objects.get(username=request.user)
