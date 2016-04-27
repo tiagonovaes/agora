@@ -56,6 +56,11 @@ def term_required(function):
             except:
                 staff4 = 'none'
 
+            try:
+                staff2 = result_data[0][1]['eduPersonAffiliation'][1]
+            except:
+                staff2 = 'none'
+
 
             if staff == 'faculty':
                 staffd = '1'
@@ -68,17 +73,16 @@ def term_required(function):
             if staff == 'student':
                 first = pn[:1].lower()
                 email = first + uid + "@dac.unicamp.br"
-                staff2 = result_data[0][1]['eduPersonAffiliation'][1]
                 if staff2 == 'POS-GRADUACAO':
                     staffd = '7'
                 if staff2 == 'GRADUACAO':
-                    staffd = '3'                
+                    staffd = '3'
                 if staff2 == 'alumni':
-                    if staff4 == 'none':
-                        staffd == '8'
-                    if staff4 == 'MESTRADO':
-                        staffd == '4'
-                    if staff4 == 'DOUTORADO':
+                    #if staff4 == 'none':
+                        #staffd == '8'
+                    #if staff4 == 'MESTRADO':
+                    staffd == '4'
+                    #if staff4 == 'DOUTORADO':
                         staffd == '5'
 
 
