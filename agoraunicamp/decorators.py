@@ -83,7 +83,7 @@ def term_required(function):
                     #if staff4 == 'MESTRADO':
                     staffd == '4'
                     #if staff4 == 'DOUTORADO':
-                        staffd == '5'
+                        #staffd == '5'
 
 
             u = UserSys.objects.get(username=request.user)
