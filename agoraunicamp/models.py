@@ -92,7 +92,7 @@ class Answer(models.Model):
   user_inst.short_description = 'Instituto'
 
   def user_stf(self):
-    return self.user.staff
+    return self.user.get_staff_display()
   user_stf.short_description = 'Staff'
 
   def userd(self):
