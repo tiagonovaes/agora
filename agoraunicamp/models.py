@@ -21,17 +21,22 @@ class User(models.Model):
   STAFF_TYPE = (
       ('1', 'Professor'),
       ('2', 'Funcionário'),
-      ('3', 'Aluno'),
-      ('4', 'Outro'),
+      ('3', 'Aluno-Graduacao'),
+      ('4', 'Aluno-Mestrado'),
+      ('5', 'Aluno-Doutorado'),
+      ('6', 'Aluno-Especial'),
+      ('7', 'Aluno-Lato'),
+      ('8', 'outro'),
+
   )
 
   primeiro_nome =  models.CharField('Primeiro nome', max_length=40, blank=True)
   ultimo_nome =  models.CharField('Sobrenome', max_length=100, blank=True)
   staff = models.CharField('Staff', max_length=1, blank=True, choices = STAFF_TYPE)
-  year_of_start = models.IntegerField('Ano de ingresso',blank=True, default='9999')
-  course = models.CharField('Curso', max_length=40, blank=True , default='curso')
+  #year_of_start = models.IntegerField('Ano de ingresso',blank=True, default='9999')
+  #course = models.CharField('Curso', max_length=40, blank=True , default='curso')
   institute = models.CharField('Instituto', max_length=40, blank=True, default='instituto')
-  academic_registry = models.IntegerField('Registro acadêmico',default='9999')
+  #academic_registry = models.IntegerField('Registro acadêmico',default='9999')
   email = models.EmailField('Email', blank=True)
   nickname = models.CharField('Apelido',max_length=40, blank=True)
   projeto = models.CharField('Projeto',max_length=40, blank=True)
@@ -82,17 +87,13 @@ class Answer(models.Model):
       self.answer_date = timezone.now()
     return super(Answer, self).save(*args, **kwargs)
 
-  def user_inst(self):
-    return self.user.institute
-  user_inst.short_description = 'Instituto'
-
-  def user_stf(self):
-    return self.user.staff
-  user_stf.short_description = 'Staff'
+  def user_dept(self):
+    return self.user.department
+  user_dept.short_description = 'Faculdade'
 
   def userd(self):
     return self.user.user
-  userd.short_description = 'Usuario'
+
   class Meta:
     verbose_name = 'resposta'
     verbose_name_plural = 'respostas'
