@@ -47,6 +47,8 @@ class User(models.Model):
     through_fields=('user', 'question'),
     related_name='question_answer',
   )
+  def __str__(self):
+    return self.get_staff_display()
 
   class Meta:
     verbose_name = 'usuário'
