@@ -15,7 +15,6 @@ class AnswerAdmin(admin.ModelAdmin):
   list_display = ['userd','user_stf','user_inst','question', '__str__']
   list_filter = ['question','user__institute','user__staff' ]
 
-
   def show_results(self, request, queryset):
     response = HttpResponse(content_type="application/json")
     serializers.serialize("json", queryset, stream=response)
@@ -31,7 +30,7 @@ class MeuEspacoAdmin(admin.ModelAdmin):
   list_display = ['projeto','user', 'secao', 'categoria', 'publ_date','comentario','link','arquivo']
 
 class MessageAdmin(admin.ModelAdmin):
-    actions=['publicar_no_mural','desfazer_publicacao_no_mural']
+    actions=['publicar_no_mural','desfazer_publicacao_no_mural','remover_mensagem']
     fields = ['projeto','kind','message','address','publ_date']
     list_display = ['projeto','kind','message','published','publ_date','address']
     list_filter = ['projeto']
@@ -43,6 +42,15 @@ class MessageAdmin(admin.ModelAdmin):
     def desfazer_publicacao_no_mural(modeladmin, request, queryset):
             queryset.update(published = 'Nao')
             return
+
+    def remover_mensagem(modeladmin, request, queryset):
+        if queryset.count() != 1:
+            modeladmin.message_user(request, "Não é possível remover mais de uma mensagem por vez.")
+            return
+        else:
+            queryset.delete()
+        return
+
 
 
 admin.site.register(Answer, AnswerAdmin)
