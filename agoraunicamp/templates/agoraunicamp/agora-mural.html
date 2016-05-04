@@ -20,24 +20,24 @@
   <div style="margin:10px;">
     <div class="mural-pad"> Mural
     </div>
-    <div class="mural-box-section" style="background:#00c0ef;">
+    <div class="mural-box-section" style="background:#ffffff;">
       {% for msg in message_conheca %}
-      <p><a href="#" style="color:black;" onclick="window.open('{{msg.address}}', 'Pagina', 'STATUS=NO, TOOLBAR=NO, LOCATION=NO, DIRECTORIES=NO, RESISABLE=NO, SCROLLBARS=YES, TOP=10, LEFT=10, WIDTH=770, HEIGHT=400');"><li class="mural-msg-font">{{msg.message}}<font class="mural-date-font">{{msg.publ_date|date:'d-m-Y H:i'}}</font></li></a></p>
+      <p><a href="#" style="font-size:170%;color:#00c0ef;" onclick="window.open('{{msg.address}}', 'Pagina', 'STATUS=NO, TOOLBAR=NO, LOCATION=NO, DIRECTORIES=NO, RESISABLE=NO, SCROLLBARS=YES, TOP=10, LEFT=10, WIDTH=770, HEIGHT=400');"><span class="mural-msg-font">{{msg.message}}<font style="font-size:60%" class="mural-date-font">[{{msg.publ_date|date:'d-m-Y'}}]</font></span></a></p>
       {% endfor %}
     </div>
-    <div class="mural-box-section" style="background:#12d673;">
+    <div class="mural-box-section" style="background:#ffffff;">
       {% for msg in message_participe %}
-      <p><a href="#" style="color:black;" onclick="window.open('{{msg.address}}', 'Pagina', 'STATUS=NO, TOOLBAR=NO, LOCATION=NO, DIRECTORIES=NO, RESISABLE=NO, SCROLLBARS=YES, TOP=10, LEFT=10, WIDTH=770, HEIGHT=400');"><li class="mural-msg-font">{{msg.message}}<font class="mural-date-font">{{msg.publ_date|date:'d-m-Y H:i'}}</font></li></a></p>
+      <p><a href="#" style="font-size:170%;color:#12d673;" onclick="window.open('{{msg.address}}', 'Pagina', 'STATUS=NO, TOOLBAR=NO, LOCATION=NO, DIRECTORIES=NO, RESISABLE=NO, SCROLLBARS=YES, TOP=10, LEFT=10, WIDTH=770, HEIGHT=400');"><span class="mural-msg-font">{{msg.message}}<font style="font-size:60%"class="mural-date-font">[{{msg.publ_date|date:'d-m-Y'}}]</font></span></a></p>
       {% endfor %}
     </div>
-    <div class="mural-box-section" style="background:#f39c12;">
+    <div class="mural-box-section" style="background:#ffffff;">
       {% for msg in message_resultados %}
-      <p><a href="#" style="color:black;" onclick="window.open('{{msg.address}}', 'Pagina', 'STATUS=NO, TOOLBAR=NO, LOCATION=NO, DIRECTORIES=NO, RESISABLE=NO, SCROLLBARS=YES, TOP=10, LEFT=10, WIDTH=770, HEIGHT=400');"><li class="mural-msg-font">{{msg.message}}<font class="mural-date-font">{{msg.publ_date|date:'d-m-Y H:i'}}</font></li></a></p>
+      <p><a href="#" style="font-size:170%;color:#f39c12;" onclick="window.open('{{msg.address}}', 'Pagina', 'STATUS=NO, TOOLBAR=NO, LOCATION=NO, DIRECTORIES=NO, RESISABLE=NO, SCROLLBARS=YES, TOP=10, LEFT=10, WIDTH=770, HEIGHT=400');"><span class="mural-msg-font">{{msg.message}}<font style="font-size:60%" class="mural-date-font">[{{msg.publ_date|date:'d-m-Y'}}]</font></span></a></p>
       {% endfor %}
     </div>
-    <div class="mural-box-section" style="background:#f56954;">
+    <div class="mural-box-section" style="background:#ffffff;">
       {% for msg in message_comunidade %}
-      <p><a href="#" style="color:black;" onclick="window.open('{% url 'forum:topic' msg.address %}', 'Pagina', 'STATUS=NO, TOOLBAR=NO, LOCATION=NO, DIRECTORIES=NO, RESISABLE=NO, SCROLLBARS=YES, TOP=10, LEFT=10, WIDTH=770, HEIGHT=400');"><li class="mural-msg-font">{{msg.message}}<font class="mural-date-font">{{msg.publ_date|date:'d-m-Y H:i'}}</font></li></a></p>
+      <p><a href="#" style="font-size:170%;color:#f56954;" onclick="window.open('{% url 'forum:topic' msg.address %}', 'Pagina', 'STATUS=NO, TOOLBAR=NO, LOCATION=NO, DIRECTORIES=NO, RESISABLE=NO, SCROLLBARS=YES, TOP=10, LEFT=10, WIDTH=770, HEIGHT=400');"><span class="mural-msg-font">{{msg.message}}<font style="font-size:60%" class="mural-date-font">[{{msg.publ_date|date:'d-m-Y'}}]</font></span></a></p>
       {% endfor %}
     </div>
     <div class="mural-pad" style="float:left;margin-bottom:20px;"> Não deixe de participar! Vote!
