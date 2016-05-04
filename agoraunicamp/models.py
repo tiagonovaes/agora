@@ -132,11 +132,11 @@ class Message(models.Model):
     address = models.CharField('Endereço',max_length=200, blank=True, default='opcional')
 
 class MeuEspaco(models.Model):
-    projeto = models.CharField('Projeto',max_length=20, blank=False)
+    projeto = models.CharField('Projeto',max_length=100, blank=False)
     user = models.CharField('Usuario',max_length=200, blank=True)
-    categoria = models.CharField('Categoria',max_length=20, blank=True)
+    categoria = models.CharField('Categoria',max_length=50, blank=True)
     publ_date = models.DateTimeField('Data de publicação')
     link =  models.URLField(max_length=1000, blank=True)
-    comentario =  models.CharField('Comentário',max_length=200, blank=True)
+    comentario =  models.CharField('Comentário',max_length=1000, blank=True)
     secao = models.CharField('Seção',max_length=30, blank=True)
     arquivo = models.FileField (upload_to = settings.MEDIA_ROOT, max_length=2000000, blank=True)
